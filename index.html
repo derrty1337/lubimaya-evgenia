@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lubimayaEvgenia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        #floating-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .float-item {
+            position: absolute;
+            opacity: 0;
+            user-select: none;
+            z-index: -1;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+        }
+        
+        #message {
+            font-size: 28px;
+            color: #e74c3c;
+            margin-bottom: 30px;
+            line-height: 1.4;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        #compliment {
+            color: #c0392b;
+            font-style: italic;
+            min-height: 40px;
+            display: block;
+            margin-top: 5px;
+            opacity: 1;
+        }
+        
+        #heart {
+            font-size: 60px;
+            color: #e74c3c;
+            cursor: pointer;
+            transition: transform 0.3s, color 0.3s;
+            user-select: none;
+            animation: pulse 1.5s infinite;
+        }
+        
+        #heart:hover {
+            transform: scale(1.15);
+            color: #c0392b;
+        }
+        
+        #heart:active {
+            transform: scale(0.95);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0.8);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #message { font-size: 22px; }
+            #heart { font-size: 50px; }
+            .container { padding: 25px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="floating-bg"></div>
+    
+    <div class="container">
+        <p id="message">Евгения я вас очень сильно люблю, помни , что ты у меня<span id="compliment">...</span></p>
+        <div id="heart">❤️</div>
+    </div>
+
+    <script>
+        // Массив комплиментов
+        const compliments = [
+            "прекрасная", "любимая", "сладкая", "аппетитная", "нежная",
+            "очаровательная", "восхитительная", "ангельская", "бесценная",
+            "самая родная", "неотразимая", "волшебная", "сказочная",
+            "идеальная", "единственная", "лучшая", "неповторимая",
+            "невероятная", "обворожительная", "вдохновляющая"
+        ];
+
+        // Элементы для фона
+        const floatElements = ['🐱', '❤️', '😻', '💕', '🐾', '🧡', '😻', '💖'];
+        const maxItems = 25;
+
+        // Создание плавающих элементов
+        function createFloatingItems() {
+            const floatingBg = document.getElementById('floating-bg');
+            if (!floatingBg) return;
+            
+            for (let i = 0; i < maxItems; i++) {
+                const item = document.createElement('div');
+                item.className = 'float-item';
+                item.textContent = floatElements[Math.floor(Math.random() * floatElements.length)];
+                
+                // Случайные параметры
+                const size = Math.random() * 30 + 15; // 15px - 45px
+                const leftPos = Math.random() * 100; // 0% - 100%
+                const duration = Math.random() * 20 + 10; // 10s - 30s
+                const delay = Math.random() * 10; // 0s - 10s
+                
+                // Применение стилей
+                item.style.fontSize = `${size}px`;
+                item.style.left = `${leftPos}%`;
+                item.style.animation = `floatUp ${duration}s linear ${delay}s infinite`;
+                
+                floatingBg.appendChild(item);
+            }
+        }
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            // Создаем плавающие элементы
+            createFloatingItems();
+            
+            // Получаем элемент сердца и добавляем обработчик
+            const heart = document.getElementById('heart');
+            if (heart) {
+                heart.addEventListener('click', () => {
+                    const randomIndex = Math.floor(Math.random() * compliments.length);
+                    document.getElementById('compliment').textContent = compliments[randomIndex];
+                    
+                    // Эффект нажатия на сердце
+                    heart.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        heart.style.transform = '';
+                    }, 100);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
